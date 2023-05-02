@@ -16,7 +16,7 @@ const dataToExtract = {
 
 const extractedData = []
 
-fetch('https://www.elprisenligenu.dk/api/v1/prices/2023/04-25_DK1.json') 
+fetch('https://www.elprisenligenu.dk/api/v1/prices/2023/04-27_DK1.json') 
 .then(response => response.json())
 .then(data=> {
     data.forEach(record =>  {
@@ -25,4 +25,5 @@ fetch('https://www.elprisenligenu.dk/api/v1/prices/2023/04-25_DK1.json')
         extractedData.push(dataObjectCluster)
     })
     console.log(extractedData)
+    console.log(extractedData.length)
 });
