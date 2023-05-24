@@ -44,7 +44,7 @@ export default async function handle(req, res) {
             res.end("PUT")
             break;
         case "PATCH":
-            var { id, price, charge } = req.body
+            var { id, price, charge, relays } = req.body
 
             var setting = await prisma.setting.update({
                 where: {
@@ -52,7 +52,8 @@ export default async function handle(req, res) {
                 },
                 data: {
                     price: Number(price),
-                    charge: Number(charge)
+                    charge: Number(charge),
+                    relays: Number(relays)
                 }
                 
             })

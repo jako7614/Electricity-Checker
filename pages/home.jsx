@@ -9,6 +9,7 @@ const HomePage = (props) => {
   const [isLoading, setIsLoading] = useState(true)
   const [price, setPrice] = useState()
   const [charge, setCharge] = useState()
+  const [relay, setRelay] = useState()
   const router = useRouter()
 
   const HandlePrice = (event) => {
@@ -19,11 +20,16 @@ const HomePage = (props) => {
     setCharge(event.target.value)
   }
 
+  const HandleRelay = (event) => {
+    setRelay(event.target.value)
+  }
+
   const HandleSubmit = () => {
     var tempSetting = {
         id: props.data[0].id,
         price: price,
-        charge: charge
+        charge: charge,
+        relays: relay
     }
 
     fetch("/api/setting/" + tempSetting.id, {
@@ -35,6 +41,7 @@ const HomePage = (props) => {
       }).then(res => res.json()).then(json => {
         setPrice(json[0].price)
         setCharge(json[0].charge)
+        setRelay(json[0].relays)
       })
   }
 
@@ -45,6 +52,7 @@ const HomePage = (props) => {
       } else {
         setPrice(props.data[0].price)
         setCharge(props.data[0].charge)
+        setRelay(props.data[0].relays)
         setIsLoading(!isLoading)
       }
   }, [])
@@ -56,12 +64,46 @@ const HomePage = (props) => {
       <form onSubmit={(event) => {
         event.preventDefault()
         HandleSubmit()
+      }} style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "2vh",
       }}>
-        <label>Elpris</label>
-        <input value={price} onChange={HandlePrice}></input>
-        <label>Afgifter</label>
-        <input value={charge} onChange={HandleCharge}></input>
-        <button type="submit">Gem</button>
+        <div style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-evenly",
+          marginTop: "2vh"
+        }}>
+          <label style={{width: "15%"}}>Elpris</label>
+          <input value={price} onChange={HandlePrice} style={{width: "50%"}}></input>
+        </div>
+        <div style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-evenly"
+        }}>
+          <label style={{width: "15%"}}>Afgifter</label>
+          <input value={charge} onChange={HandleCharge} style={{width: "50%"}}></input>
+        </div>
+        <div style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-evenly"
+        }}>
+          <label style={{width: "15%"}}>Relæer</label>
+          <input value={relay} onChange={HandleRelay} style={{width: "50%"}}></input>
+        </div>
+        <div style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center"
+          }}>
+          <button type="submit" style={{
+            width: "50%",
+            marginTop: "5vh"
+          }}>Gem</button>
+        </div>
       </form>
     </>
   )

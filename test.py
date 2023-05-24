@@ -26,6 +26,7 @@ print("Channel 3:The Common Contact is access to the Normal Closed Contact!")
 data = []
 withinResetTime = False
 priceToBeUnder = 0
+relays = 1
 offset = 10
 
 def Delete_Data():
@@ -33,13 +34,12 @@ def Delete_Data():
 		host="localhost",
 		user="root",
 		password="Had03834",
-		database="electricity_checker"
+		database="pricechecker"
 	)
 
 	mycursor = mydb.cursor()
 
 	sql= "DELETE FROM pricerecord"
-
 	mycursor.execute(sql)
 	mydb.commit()
 
@@ -61,7 +61,7 @@ def Write_Data(date):
 			host="localhost",
 			user="root",
 			password="Had03834",
-			database="electricity_checker"
+			database="pricechecker"
 		)
 		
 		mycursor = mydb.cursor()
@@ -78,7 +78,7 @@ def Get_Data():
 		host="localhost",
 		user="root",
 		password="Had03834",
-		database="electricity_checker"
+		database="pricechecker"
 	)
 
 	mycursor = mydb.cursor()
@@ -101,13 +101,15 @@ def GetPrice():
 		host="localhost",
 		user="root",
 		password="Had03834",
-		database="electricity_checker"
+		database="pricechecker"
 	)
 
 	mycursor = mydb.cursor()
 	mycursor.execute("SELECT * FROM setting")
 	priceData = mycursor.fetchall()
 	calculatedPrice = (priceData[0][1] - priceData[0][2])
+	global relays
+	relays = priceData[0][3]
 	global priceToBeUnder
 	priceToBeUnder = calculatedPrice
 	
@@ -116,9 +118,9 @@ def GetPrice():
 try:
 
 	try:
-			import httplib
+		import httplib
 	except:
-			import http.client as httplib
+		import http.client as httplib
  
 	def haveInternet():
 		conn = httplib.HTTPConnection("www.google.com", timeout=5)
@@ -153,11 +155,41 @@ try:
 					now = datetime.datetime.now()
 					if start <= now <= end:
 						if (record[1] <= priceToBeUnder):
-							# GPIO.output(Relay_Ch1,GPIO.HIGH)
-							print("Channel 1:The Common Contact is access to the Normal Open Contact!")
+							if (relays == 1):
+								# GPIO.output(Relay_Ch1,GPIO.LOW)
+								print("Channel 1:The Common Contact is access to the Normal Open Contact!")
+								# GPIO.output(Relay_Ch2,GPIO.HIGH)
+								print("Channel 2:The Common Contact is access to the Normal Closed Contact!")
+								# GPIO.output(Relay_Ch3,GPIO.HIGH)
+								print("Channel 3:The Common Contact is access to the Normal Closed Contact!")
+							elif (relays == 2):
+								# GPIO.output(Relay_Ch1,GPIO.LOW)
+								print("Channel 1:The Common Contact is access to the Normal Open Contact!")
+								# GPIO.output(Relay_Ch2,GPIO.LOW)
+								print("Channel 2:The Common Contact is access to the Normal Open Contact!")
+								# GPIO.output(Relay_Ch3,GPIO.HIGH)
+								print("Channel 3:The Common Contact is access to the Normal Closed Contact!")
+							elif (relays == 3):
+								# GPIO.output(Relay_Ch1,GPIO.LOW)
+								print("Channel 1:The Common Contact is access to the Normal Open Contact!")
+								# GPIO.output(Relay_Ch2,GPIO.LOW)
+								print("Channel 2:The Common Contact is access to the Normal Open Contact!")
+								# GPIO.output(Relay_Ch3,GPIO.LOW)
+								print("Channel 3:The Common Contact is access to the Normal Open Contact!")
+							else:
+								# GPIO.output(Relay_Ch1,GPIO.HIGH)
+								print("Channel 1:The Common Contact is access to the Normal Closed Contact!")
+								# GPIO.output(Relay_Ch2,GPIO.HIGH)
+								print("Channel 2:The Common Contact is access to the Normal Closed Contact!")
+								# GPIO.output(Relay_Ch3,GPIO.HIGH)
+								print("Channel 3:The Common Contact is access to the Normal Closed Contact!")
 						else:
 							# GPIO.output(Relay_Ch1,GPIO.HIGH)
 							print("Channel 1:The Common Contact is access to the Normal Closed Contact!")
+							# GPIO.output(Relay_Ch2,GPIO.HIGH)
+							print("Channel 2:The Common Contact is access to the Normal Closed Contact!")
+							# GPIO.output(Relay_Ch3,GPIO.HIGH)
+							print("Channel 3:The Common Contact is access to the Normal Closed Contact!")
 							
 				time.sleep(10)
 				connection = haveInternet()
